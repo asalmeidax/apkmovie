@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>SuperFlix Player</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    #player {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #000;
+    }
+
+    #erro {
+      display: none;
+      color: #fff;
+      font: 18px sans-serif;
+      padding: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div id="erro"></div>
+  <iframe
+    id="player"
+    frameborder="0"
+    allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+    allowfullscreen>
+  </iframe>
+
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const src = params.get("src");
+      const iframe = document.getElementById("player");
+      const erro = document.getElementById("erro");
+
+      try {
+        if (!src) throw new Error("Link ausente.");
+
+        const u = new URL(src);
+
+        if (u.protocol !== "https:" || u.hostname !== "streambetter.lat") {
+          throw new Error("Link StreamBetter inválido.");
+        }
+
+        iframe.src = u.toString();
+        iframe.focus();
+      } catch (e) {
+        iframe.style.display = "none";
+        erro.style.display = "block";
+        erro.textContent = e.message || "Não foi possível abrir o player.";
+      }
+    })();
+  </script>
+</body>
+</html>
